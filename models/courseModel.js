@@ -6,7 +6,13 @@ const courseSchema = new mongoose.Schema({
     price: { type: Number, required: true },
     language: { type: String, required: true },
     level: { type: String, required: true },
-    syllabus: { type: [String], default: [] },
+    videoLength: { type: String, required: true },
+    syllabus: [
+        {
+            week: { type: Number, required: true },
+            content: { type: Object, required: true }
+        }
+    ],
     instructor: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Instructor',
@@ -17,3 +23,4 @@ const courseSchema = new mongoose.Schema({
 const courseModel = mongoose.model('Course', courseSchema);
 
 export default courseModel;
+

@@ -2,10 +2,16 @@ import courseModel from "../models/courseModel.js";
 
 const addCourse = async (req, res) => {
     try {
-        const { name, description, price, language, level, syllabus } = req.body;
+        const { name, description, price, language, videoLength, level, syllabus } = req.body;
 
-        if (!name || !description || !price || !language || !level || !syllabus || !Array.isArray(syllabus)) {
+        if (!name || !description || !price || !language || !videoLength || !level || !Array.isArray(syllabus)) {
             return res.status(400).json({success: false, message: 'Please enter valid course details, and ensure syllabus is an array'});
+        }
+
+        for (const item of syllabus) {
+            if (!item.week || !item.content || !item.content.title) {
+                return res.status(400).json({success: false, message: 'Each syllabus item must include a week and content with a title'});
+            }
         }
 
         const user = req.user;
@@ -18,13 +24,14 @@ const addCourse = async (req, res) => {
             description,
             price,
             language,
+            videoLength,
             level,
             syllabus,
             instructor: req.user._id
         });
 
         await newCourse.save();
-        res.status(201).json({ success: true, message: 'Course added successfully', course: newCourse });
+        res.status(201).json({ success: true, message: `Course ${name} added successfully`, course: newCourse });
 
     } catch (error) {
         console.error(error);
@@ -32,10 +39,11 @@ const addCourse = async (req, res) => {
     }
 }
 
+
 const updateCourse = async (req, res) => {
     try {
         const { courseId } = req.params;
-        const { name, description, price, language, level, syllabus } = req.body;
+        const { name, description, price, language, videoLength, level, syllabus } = req.body;
 
         const course = await courseModel.findById(courseId);
         if (!course) {
@@ -51,6 +59,7 @@ const updateCourse = async (req, res) => {
         course.description = description || course.description;
         course.price = price || course.price;
         course.language = language || course.language;
+        course.videoLength = videoLength || course.videoLength;
         course.level = level || course.level;
         course.syllabus = syllabus || course.syllabus;
 
