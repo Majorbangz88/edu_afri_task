@@ -7,8 +7,9 @@ const instructorSchema = new mongoose.Schema({
     course: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Course',
-        required: true
+        required: false
     },
+    role: {type: String, required: true},
 }, { minimize: false });
 
 const instructorModel = mongoose.model('Instructor', instructorSchema);
