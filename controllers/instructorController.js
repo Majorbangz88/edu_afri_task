@@ -1,4 +1,5 @@
 import courseModel from "../models/courseModel.js";
+import Announcement from "../models/announcementModel.js";
 
 const addCourse = async (req, res) => {
     try {
@@ -158,5 +159,34 @@ const deleteCourseByName = async (req, res) => {
     }
 }
 
+const announcement = async (req, res) => {
+    try {
+        const { courseId, title, message, videoUrl } = req.body;
 
-export { addCourse, updateCourse, findCourse, findCourseByName, deleteCourse, deleteCourseByName };
+        if (!courseId || !title || !message) {
+            return res.status(400).json({ success: false, message: 'Announcement details are required!' });
+        }
+
+        const foundCourse = await courseModel.findById(courseId);
+        if (!foundCourse) {
+            return res.status(400).json({success: false, message: 'Course not found!'});
+        }
+
+        const newAnnouncement = new Announcement({
+            title,
+            message,
+            videoUrl,
+            course: foundCourse._id
+        });
+
+        await newAnnouncement.save();
+        res.status(200).json({ message: 'Announcement created successfully', announcement: newAnnouncement });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error', error });
+    }
+}
+
+
+export { addCourse, updateCourse, findCourse, findCourseByName, deleteCourse, deleteCourseByName, announcement };

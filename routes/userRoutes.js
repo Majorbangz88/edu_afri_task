@@ -7,7 +7,8 @@ import {
     findCourse,
     findCourseByName,
     deleteCourse,
-    deleteCourseByName
+    deleteCourseByName,
+    announcement
 } from "../controllers/instructorController.js";
 
 const userRouter = express.Router();
@@ -21,5 +22,6 @@ userRouter.get('/find', authMiddleware, findCourse);
 userRouter.get('/find/name', authMiddleware, findCourseByName);
 userRouter.delete('/delete', authMiddleware, deleteCourse);
 userRouter.delete('/delete/name', authMiddleware, deleteCourseByName);
+userRouter.post('/announcement', authMiddleware, announcement);
 
 export default userRouter;
