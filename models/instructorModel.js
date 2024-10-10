@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-import Course from "./courseModel.js";
 
 const instructorSchema = new mongoose.Schema({
     name: {type: String, required: true},
@@ -7,7 +6,7 @@ const instructorSchema = new mongoose.Schema({
     password: {type: String, required: true},
     course: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: Course,
+        ref: 'Course',
         required: true
     },
 }, { minimize: false });
