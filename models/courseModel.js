@@ -18,12 +18,6 @@ const courseSchema = new mongoose.Schema({
         ref: 'Instructor',
         required: true
     },
-    // announcements: [
-    //     {
-    //         type: mongoose.Schema.Types.ObjectId,
-    //         ref: 'Announcement'
-    //     }
-    // ]
 });
 
 const courseModel = mongoose.model('Course', courseSchema);
