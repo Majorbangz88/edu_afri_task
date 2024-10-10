@@ -106,4 +106,48 @@ const findCourseByName = async (req, res) => {
     }
 }
 
-export { addCourse, updateCourse, findCourse, findCourseByName };
+const deleteCourse = async (req, res) => {
+    try {
+        const { courseId } = req.body;
+
+        if (!courseId) {
+            return res.status(400).json({ success: false, message: 'Course ID is required' });
+        }
+
+        const foundCourse = await courseModel.findById(courseId);
+        if (!foundCourse) {
+            return res.status(404).json({ success: false, message: 'Course not found' });
+        }
+
+        await courseModel.findByIdAndDelete(courseId);
+        res.json({ success: true, message: 'Course removed successfully' });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: error.message });
+    }
+}
+
+const deleteCourseByName = async (req, res) => {
+    try {
+        const { name } = req.body;
+
+        if (!name) {
+            return res.status(400).json({ success: false, message: 'Course name is required!' });
+        }
+
+        const foundCourse = await courseModel.findOneAndDelete({name});
+        if (!foundCourse) {
+            return res.status(404).json({ success: false, message: 'Course not found' });
+        }
+
+        return res.json({ success: true, message: `Course ${name} removed successfully` });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: error.message });
+    }
+}
+
+
+export { addCourse, updateCourse, findCourse, findCourseByName, deleteCourse, deleteCourseByName };
