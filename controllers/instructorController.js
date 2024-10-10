@@ -68,4 +68,42 @@ const updateCourse = async (req, res) => {
     }
 }
 
-export { addCourse, updateCourse };
+const findCourse = async (req, res) => {
+    try {
+        const { courseId } = req.body;
+        if (!courseId) {
+            return res.status(400).json({ success: false, message: 'Course id is required!' });
+        }
+
+        const foundCourse = await courseModel.findById(courseId)
+        if (!foundCourse) {
+            return res.status(404).json({ success: false, message: 'Course not found!' });
+        }
+        return res.status(201).json({success: true, foundCourse});
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: error.message });
+    }
+}
+
+const findCourseByName = async (req, res) => {
+    try {
+        const { name } = req.body;
+
+        if (!name) {
+            return res.status(400).json({ success: false, message: 'Course name is required!' });
+        }
+
+        const foundCourse = await courseModel.findOne({name});
+        if (!foundCourse) {
+            return res.status(404).json({ success: false, message: 'Course not found' });
+        }
+        return res.status(201).json({success: true, foundCourse});
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: error.message });
+    }
+}
+
+export { addCourse, updateCourse, findCourse, findCourseByName };
